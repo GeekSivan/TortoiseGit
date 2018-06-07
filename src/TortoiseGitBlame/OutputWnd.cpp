@@ -78,8 +78,6 @@ int COutputWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// for some unknown reason, the SetExtendedStyle in OnCreate/PreSubclassWindow is not working here
 	m_LogList.SetStyle();
 
-	m_LogList.SetFont(&m_Font);
-
 	m_Gravatar.Create(L"", WS_CHILD | WS_VISIBLE, rectDummy, this);
 	bool bEnableGravatar = !!CRegDWORD(L"Software\\TortoiseGit\\EnableGravatar", FALSE);
 	m_Gravatar.EnableGravatar(bEnableGravatar);

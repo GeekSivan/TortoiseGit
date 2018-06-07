@@ -46,8 +46,13 @@ void CPatchListCtrl::PreSubclassWindow()
 	// use the default font, create a copy of it and
 	// change the copy to BOLD (leave the rest of the font
 	// the same)
+	NONCLIENTMETRICS metrics = { 0 };
+	metrics.cbSize = sizeof(NONCLIENTMETRICS);
+	SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &metrics, FALSE);
 	LOGFONT lf = { 0 };
-	GetFont()->GetLogFont(&lf);
+	memcpy_s(&lf, sizeof(LOGFONT), &metrics.lfMessageFont, sizeof(LOGFONT));
+	m_Font.CreateFontIndirect(&lf);
+	SetFont(&m_Font);
 	lf.lfWeight = FW_BOLD;
 	m_boldFont.CreateFontIndirect(&lf);
 }

@@ -291,6 +291,14 @@ BOOL CBrowseRefsDlg::OnInitDialog()
 	AddAnchor(IDC_INCLUDENESTEDREFS, BOTTOM_LEFT);
 	AddAnchor(IDHELP, BOTTOM_RIGHT);
 
+	NONCLIENTMETRICS metrics = { 0 };
+	metrics.cbSize = sizeof(NONCLIENTMETRICS);
+	SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &metrics, FALSE);
+	LOGFONT lf = { 0 };
+	memcpy_s(&lf, sizeof(LOGFONT), &metrics.lfMessageFont, sizeof(LOGFONT));
+	m_Font.CreateFontIndirect(&lf);
+	m_RefTreeCtrl.SetFont(&m_Font);
+
 	m_ListRefLeafs.SetExtendedStyle(m_ListRefLeafs.GetExtendedStyle() | LVS_EX_INFOTIP | LVS_EX_DOUBLEBUFFER);
 	static UINT columnNames[] = { IDS_BRANCHNAME, IDS_TRACKEDBRANCH, IDS_DATELASTCOMMIT, IDS_LASTCOMMIT, IDS_LASTAUTHOR, IDS_HASH, IDS_DESCRIPTION };
 	static int columnWidths[] = { 0, 0, 0, 300, 0, 0, 80 };
@@ -298,6 +306,7 @@ BOOL CBrowseRefsDlg::OnInitDialog()
 		(1 << eCol_LastAuthor) | (1 << eCol_Hash) | (1 << eCol_Description);
 	m_ListRefLeafs.m_bAllowHiding = false;
 	m_ListRefLeafs.Init();
+	m_ListRefLeafs.SetFont(&m_Font);
 	m_ListRefLeafs.SetListContextMenuHandler([&](CPoint point) {OnContextMenu_ListRefLeafs(point); });
 	m_ListRefLeafs.m_ColumnManager.SetNames(columnNames, _countof(columnNames));
 	m_ListRefLeafs.m_ColumnManager.ReadSettings(dwDefaultColumns, 0, L"BrowseRefs", _countof(columnNames), columnWidths);

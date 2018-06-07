@@ -1,6 +1,6 @@
 // TortoiseGit - a Windows shell extension for easy version control
 
-// Copyright (C) 2008-2017 - TortoiseGit
+// Copyright (C) 2008-2018 - TortoiseGit
 // Copyright (C) 2003-2008 - TortoiseSVN
 
 // This program is free software; you can redistribute it and/or
@@ -981,6 +981,14 @@ void CGitProgressList::OnSize(UINT nType, int cx, int cy)
 void CGitProgressList::Init()
 {
 	SetExtendedStyle((CRegDWORD(L"Software\\TortoiseGit\\FullRowSelect", TRUE) ? LVS_EX_FULLROWSELECT : 0) | LVS_EX_DOUBLEBUFFER);
+
+	NONCLIENTMETRICS metrics = { 0 };
+	metrics.cbSize = sizeof(NONCLIENTMETRICS);
+	SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &metrics, FALSE);
+	LOGFONT lf = { 0 };
+	memcpy_s(&lf, sizeof(LOGFONT), &metrics.lfMessageFont, sizeof(LOGFONT));
+	m_Font.CreateFontIndirect(&lf);
+	SetFont(&m_Font);
 
 	DeleteAllItems();
 	int c = GetHeaderCtrl()->GetItemCount()-1;

@@ -1,6 +1,6 @@
 // TortoiseGit - a Windows shell extension for easy version control
 
-// Copyright (C) 2008-2017 - TortoiseGit
+// Copyright (C) 2008-2018 - TortoiseGit
 // Copyright (C) 2003-2008 - TortoiseSVN
 
 // This program is free software; you can redistribute it and/or
@@ -194,7 +194,16 @@ BOOL CFileDiffDlg::OnInitDialog()
 
 	m_tooltips.AddTool(IDC_SWITCHLEFTRIGHT, IDS_FILEDIFF_SWITCHLEFTRIGHT_TT);
 
+	NONCLIENTMETRICS metrics = { 0 };
+	metrics.cbSize = sizeof(NONCLIENTMETRICS);
+	SystemParametersInfo(SPI_GETNONCLIENTMETRICS, 0, &metrics, FALSE);
+	LOGFONT lf = { 0 };
+	memcpy_s(&lf, sizeof(LOGFONT), &metrics.lfMessageFont, sizeof(LOGFONT));
+	m_Font.CreateFontIndirect(&lf);
+	SetFont(&m_Font);
+
 	m_cFileList.SetRedraw(false);
+	m_cFileList.SetFont(&m_Font);
 	m_cFileList.DeleteAllItems();
 	DWORD exStyle = LVS_EX_DOUBLEBUFFER | LVS_EX_INFOTIP;
 	if (CRegDWORD(L"Software\\TortoiseGit\\FullRowSelect", TRUE))
